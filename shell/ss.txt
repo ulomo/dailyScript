@@ -1,2 +1,3 @@
+# some good in use vpn
 sslocal -s 45.56.89.181 -p 8099 -k eIW0Dnk69454e6nSwuspv9DmS201tQ0D
 sslocal -s 38.100.229.84 -p 39 -k bannedbook.org -m aes-256-cfb -l 1080
