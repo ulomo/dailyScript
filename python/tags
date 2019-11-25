@@ -5,4 +5,4 @@
 !_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
 !_TAG_PROGRAM_URL	https://ctags.io/	/official site/
 !_TAG_PROGRAM_VERSION	0.0.0	/3fdf28bc/
-tk	practice.py	/^import tkinter as tk$/;"	I
+dir	practice.py	/^dir = '\/home\/narciss'$/;"	v
