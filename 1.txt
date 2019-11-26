@@ -3,3 +3,5 @@ add two file
 add three file
 12345
 hello
+12
+hello
