@@ -8,7 +8,7 @@ notify-send "desktop background will be changed every 3 minutes"
 ps -ef | grep shell/changeDesktopBg.sh | grep -v grep | sed '$d' | awk '{print "kill " $2}' | sh
 ps -ef | grep sleep | awk '{print "kill " $2}' | sh
 
-dir=~Pictures/background
+dir=~/Pictures/background
 
 for i in ${dir}/*
 do
