@@ -1,6 +1,7 @@
 #!/usr/bin/bash
 #used to auto create hexo file
 
+notify-send "generate hexo file"
 #define some variables
 documentdir=~/Documents/note/
 hexodir=~/Documents/hexo/source/_posts

@@ -22,6 +22,8 @@ realdir=`whereis sslink | awk -F ":" '{print $2}' | xargs ls -l | awk -F ">" '{p
 cd $realdir
 if [[ $wanna == "yes" ]];then
     curl https://www.youneed.win/free-ss | grep  '<td align=' | grep -v 'class' | grep -E '^<' | awk -F'>|<' '{print $3}' > account.txt
+elif [[ $wanna == "no" ]];then
+    cat ./ss.txt | grep  '<td align=' | grep -v 'class' | grep -E '^<' | awk -F'>|<' '{print $3}' > account.txt
 fi
 
 #product the command line to a list
@@ -54,6 +56,7 @@ do
                     killall sslocal 
                     echo -e "\033[32m the sslocal process has been killed successfully \033[0m"
                 fi
+                notify-send "starting shadowsocks"
                 eval $m 2>/dev/null 1>&2 &
                 line
                 ;;
