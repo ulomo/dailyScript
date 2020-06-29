@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+
+[[ $1 != qq && $1 != wechat || $2 != start && $2 != stop ]] && echo "arguments error: wechat/qq start/stop " && exit
+
+app=$1; args=$2
+service_status=`systemctl is-active docker`
+get_status(){
+    sudo docker ps | grep $app &>/dev/null ; echo $?
+}
+app_status=$(get_status)
+image_name=$(sudo docker images | grep $app | awk '{print $1}')
+if [ $app == wechat ];then
+    tmp_file=WeChatFiles
+elif [ $app == qq ];then
+    tmp_file=TencentFiles
+fi
+
+case $args in
+    "stop")
+        [[ $service_status == "active" && $app_status == 0 ]]  && sudo docker stop $app &>/dev/null
+        ;;
+    "start")
+        # check docker running or not
+        [ $service_status == "inactive" ] && sudo systemctl start docker &>/dev/null
+        [ $app_status == 0 ] && exit
+
+        # 允许所有用户访问X11服务
+        xhost + &>/dev/null
+
+        # 非gnome桌面无法显示界面 需要安装gnome-settings-daemon，然后运行/usr/lib/gsd-xsettings
+        if [ -e /usr/lib/gsd-xsettings ];then
+            if ! pgrep gsd-xsettings &>/dev/null; then
+                /usr/lib/gsd-xsettings &>/dev/null &
+            fi
+        else
+            sudo pacman --noconfirm -S gnome-settings-daemon
+            /usr/lib/gsd-xsettings &>/dev/null &
+        fi
+
+        # 启动
+        if sudo docker ps -a | grep $app &>/dev/null; then
+            sudo docker start $app &>/dev/null
+        else
+            sudo docker run -d --name $app \
+                --device /dev/snd \
+                -v $HOME/.cache/$tmp_file:/$tmp_file\
+                -v /tmp/.X11-unix:/tmp/.X11-unix \
+                -e XMODIFIERS=@im=fcitx \
+                -e QT_IM_MODULE=fcitx \
+                -e GTK_IM_MODULE=fcitx \
+                -e DISPLAY=unix$DISPLAY \
+                -e AUDIO_GID=`getent group audio | cut -d: -f3` \
+                -e VIDEO_GID=`getent group video | cut -d: -f3` \
+                -e GID=`id -g` \
+                -e UID=`id -u` \
+                $image_name
+        fi
+esac
